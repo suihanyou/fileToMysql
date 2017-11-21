@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="cacheEnabled" value="false" />
+		<setting name="logImpl" value="LOG4J" />
+	</settings>
+	<typeAliases>
+		<typeAlias type="net.snailgame.importMysql.po.TbAAcctBalance"
+			alias="tbAAcctBalance" />
+		<typeAlias type="net.snailgame.importMysql.po.TbUOfrDetailInst"
+			alias="tbUOfrDetailInst" />
+		<typeAlias type="net.snailgame.importMysql.po.TbUServ"
+			alias="tbUServ" />
+	</typeAliases>
+
+	<mappers>
+		<mapper resource="sqlMap/tb_a_acct_balance_mysql.xml" />
+		<mapper resource="sqlMap/TbUOfrDetailInstMapper.xml" />
+		<mapper resource="sqlMap/TbUServMapper.xml" />
+	</mappers>
+</configuration>

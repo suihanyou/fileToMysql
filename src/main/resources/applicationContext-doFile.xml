@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+           http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+	<!-- init log4j -->
+	<bean id="envInitializerBean" class="net.snailgame.importMysql.util.EnvInitializerBean"
+		init-method="init">
+		<property name="log_properties" value="src/main/resources/log4j.xml" />
+	</bean>
+
+	<bean id="config" class="net.snailgame.importMysql.config.Config">
+		<property name="dataFilePath"
+			value="/Users/SHY/Documents/workspace/file-to-mysql/scan" />
+		<property name="finishPath"
+			value="/Users/SHY/Documents/workspace/file-to-mysql/finish/" />
+		<property name="doingFilePath"
+			value="/Users/SHY/Documents/workspace/file-to-mysql/doing/" />
+		<property name="runType" value="INSERT_DB" /> <!-- SYNC_REDIS, INSERT_DB -->
+		<property name="sendNumMin" value="1000" />
+		<property name="sendMqTopic" value="" />
+		<property name="userAttrTag" value="" />
+		<property name="acctRelTag" value="" />
+		<property name="userOrderTag" value="" />
+		<property name="insertDbThreadNum" value="10" />
+		<property name="sendMqThreadNum" value="10" />
+		<property name="tableName" value="TBUSERV" /> <!-- TBUSERV, TBAACCTBALANCE, TBUDETAILINST -->
+	</bean>
+
+	<bean id="zkDbConfig" class="net.snailgame.db.config.ZkDbConfig">
+		<property name="mycatCluster" value="mycat-cluster-2" />
+		<property name="serviceNode" value="/register" />
+		<property name="clientNode" value="/client" />
+		<property name="zkUrl"
+			value="170.1.1.146:2181,170.1.1.147:2181,170.1.1.179:2181" />
+		<property name="id0" value="9d34b304c2104a7e6891943f19064dd8" />
+		<property name="id1" value="85d27b5f6269f3cba47dac981313c3ca" />
+		<property name="postfix"
+			value="/ocs?autoReconnect=true&amp;failOverReadOnly=false&amp;maxReconnects=5&amp;useUnicode=true&amp;characterEncoding=UTF-8" />
+		<property name="reConnectSkipTime" value="1800000" />
+		<property name="checkSkipTime" value="300000" />
+		<property name="dbType" value="druid" />
+	</bean>
+	<bean id="zookeeperDataSource" class="net.snailgame.db.zk.ZkDataSource" />
+	<bean id="dataSourceTemplate" class="com.alibaba.druid.pool.DruidDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="defaultAutoCommit" value="false" />
+		<property name="poolPreparedStatements" value="true" />
+		<property name="username" value="ocs" />
+		<property name="initialSize" value="20" />
+		<property name="maxActive" value="100" />
+		<property name="maxIdle" value="40" />
+		<property name="minIdle" value="20" />
+		<property name="validationQuery" value="SELECT 1" />
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+	</bean>
+
+	<bean id="mysqlAbstractDao" class="net.snailgame.importMysql.dao.impl.MysqlAbstractDaoImpl">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	<!-- ================================事务相关控制================================================= -->
+	<bean name="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="zookeeperDataSource"></property>
+	</bean>
+
+	<tx:advice id="userTxAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="find*" propagation="NOT_SUPPORTED" />
+			<tx:method name="get*" propagation="NOT_SUPPORTED" />
+			<tx:method name="select*" propagation="NOT_SUPPORTED" />
+			<tx:method name="query*" propagation="NOT_SUPPORTED" />
+
+			<tx:method name="*" propagation="REQUIRED" read-only="false"
+				rollback-for="java.lang.RuntimeException" />
+		</tx:attributes>
+	</tx:advice>
+
+	<aop:config>
+		<aop:pointcut id="pc"
+	expression="execution( * net.snailgame.importMysql.dao.*.*Dao*.*(..)))" /> <!--把事务控制在Service层 -->
+		<aop:advisor pointcut-ref="pc" advice-ref="userTxAdvice" />
+	</aop:config>
+
+	<bean class="org.mybatis.spring.SqlSessionTemplate" id="sqlSession">
+		<!-- 第一个参数是 sqlSessionFactory -->
+		<constructor-arg ref="sqlSessionFactory" index="0" />
+		<!-- 第二个参数是 ExecutorType -->
+		<!-- <constructor-arg value="BATCH" index="1" /> -->
+	</bean>
+
+	<!-- myibatis -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="zookeeperDataSource" />
+		<property name="configLocation" value="classpath:mybatis-config-sectionno.xml" />
+	</bean>
+</beans>  

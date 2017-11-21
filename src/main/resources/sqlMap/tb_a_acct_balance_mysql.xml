@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="net.snailgame.importMysql.po.TbAAcctBalance">
+	<resultMap id="tbAAcctBalance" type="net.snailgame.importMysql.po.TbAAcctBalance">
+		<result column="ACCT_BALANCE_ID" property="acct_balance_id" />
+		<result column="ACCT_ID" property="acct_id" />
+		<result column="BALANCE_TYPE_ID" property="balance_type_id" />
+		<result column="LATN_ID" property="latn_id" />
+		<result column="BALANCE" property="balance" />
+		<result column="FREE_BALANCE" property="free_balance" />
+		<result column="BALANCE_NAME" property="balance_name" />
+		<result column="EFF_DATE" property="eff_date" />
+		<result column="EXP_DATE" property="exp_date" />
+		<result column="STATE" property="state" />
+	</resultMap>
+	<insert id="inserts" parameterType="tbAAcctBalance">
+		insert into
+		tb_a_acct_balance
+		(ACCT_BALANCE_ID,ACCT_ID,BALANCE_TYPE_ID,LATN_ID,BALANCE,FREE_BALANCE,BALANCE_NAME,EFF_DATE,EXP_DATE,STATE)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(
+			#{item.acct_balance_id},
+			#{item.acct_id},
+			#{item.balance_type_id},
+			#{item.latn_id},
+			#{item.balance},
+			#{item.free_balance},
+			#{item.balance_name},
+			#{item.eff_date},
+			#{item.exp_date},
+			#{item.state}
+			)
+		</foreach>
+	</insert>
+</mapper>
+
+
+

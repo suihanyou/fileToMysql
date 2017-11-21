@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="net.snailgame.importMysql.po.TbUServ">
+	<resultMap id="tbUServ" type="net.snailgame.importMysql.po.TbUServ">
+		<id column="Serv_Id" property="servId" jdbcType="BIGINT" />
+		<result column="Sn" property="sn" jdbcType="VARCHAR" />
+		<result column="Cust_Id" property="custId" jdbcType="BIGINT" />
+		<result column="Acc_Nbr" property="accNbr" jdbcType="VARCHAR" />
+		<result column="Band_Id" property="bandId" jdbcType="BIGINT" />
+		<result column="IMSI_CODE" property="imsiCode" jdbcType="VARCHAR" />
+		<result column="BASIC_STATE" property="basicState" jdbcType="CHAR" />
+		<result column="EXT_STATE" property="extState" jdbcType="CHAR" />
+		<result column="State_Date" property="stateDate" jdbcType="TIMESTAMP" />
+		<result column="Offer_ID" property="offerId" jdbcType="VARCHAR" />
+		<result column="LATN_ID" property="latnId" jdbcType="INTEGER" />
+		<result column="STREAM_CEIL" property="streamCeil" jdbcType="CHAR" />
+		<result column="IS_VPN" property="isVpn" jdbcType="CHAR" />
+		<result column="Create_Date" property="createDate" jdbcType="TIMESTAMP" />
+		<result column="Rent_Date" property="rentDate" jdbcType="TIMESTAMP" />
+		<result column="Completed_Date" property="completedDate"
+			jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		Serv_Id,Sn, Cust_Id, Acc_Nbr, Band_Id, IMSI_CODE,
+		BASIC_STATE,
+		EXT_STATE,
+		State_Date,
+		Offer_ID, LATN_ID, STREAM_CEIL,
+		IS_VPN,
+		Create_Date, Rent_Date, Completed_Date
+	</sql>
+
+	<insert id="inserts" parameterType="tbUServ">
+		insert into tb_u_serv
+		(Serv_Id,Sn, Cust_Id, Acc_Nbr,
+		Band_Id, IMSI_CODE,
+		BASIC_STATE,
+		EXT_STATE,
+		State_Date, Offer_ID,
+		LATN_ID, STREAM_CEIL,
+		IS_VPN,
+		Create_Date,
+		Rent_Date, Completed_Date
+		)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.servId,jdbcType=BIGINT},#{item.sn,jdbcType=VARCHAR},
+			#{item.custId,jdbcType=BIGINT},
+			#{item.accNbr,jdbcType=VARCHAR},
+			#{item.bandId,jdbcType=BIGINT}, #{item.imsiCode,jdbcType=VARCHAR},
+			#{item.basicState,jdbcType=CHAR},
+			#{item.extState,jdbcType=CHAR},
+			#{item.stateDate,jdbcType=TIMESTAMP},
+			#{item.offerId,jdbcType=VARCHAR},
+			#{item.latnId,jdbcType=INTEGER},
+			#{item.streamCeil,jdbcType=CHAR},
+			#{item.isVpn,jdbcType=CHAR},
+			#{item.createDate,jdbcType=TIMESTAMP},
+			#{item.rentDate,jdbcType=TIMESTAMP},
+			#{item.completedDate,jdbcType=TIMESTAMP}
+			)
+		</foreach>
+	</insert>
+
+</mapper>

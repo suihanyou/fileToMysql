@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="net.snailgame.importMysql.po.TbUOfrDetailInst">
+	<resultMap id="tbUOfrDetailInst" type="net.snailgame.importMysql.po.TbUOfrDetailInst">
+		<id column="OFR_DETAIL_INST_ID" property="ofrDetailInstId"
+			jdbcType="BIGINT" />
+		<result column="OFR_DETAIL_INST_NAME" property="ofrDetailInstName"
+			jdbcType="VARCHAR" />
+		<result column="OFR_DETAIL_INST_REF_ID" property="ofrDetailInstRefId"
+			jdbcType="BIGINT" />
+		<result column="OFR_INST_ID" property="ofrInstId" jdbcType="BIGINT" />
+		<result column="OFR_ID" property="ofrId" jdbcType="VARCHAR" />
+		<result column="OFR_DETAIL_TYPE_ID" property="ofrDetailTypeId"
+			jdbcType="VARCHAR" />
+		<result column="OFR_DETAIL_INST_DESC" property="ofrDetailInstDesc"
+			jdbcType="VARCHAR" />
+		<result column="CRT_DATE" property="crtDate" jdbcType="TIMESTAMP" />
+		<result column="EFF_DATE" property="effDate" jdbcType="TIMESTAMP" />
+		<result column="EXP_DATE" property="expDate" jdbcType="TIMESTAMP" />
+		<result column="MOD_DATE" property="modDate" jdbcType="TIMESTAMP" />
+		<result column="EFF_STATE" property="effState" jdbcType="VARCHAR" />
+		<result column="OFR_INST_LATN_ID" property="ofrInstLatnId"
+			jdbcType="INTEGER" />
+		<result column="LATN_ID" property="latnId" jdbcType="INTEGER" />
+		<result column="OFR_DETAIL_ID" property="ofrDetailId" jdbcType="BIGINT" />
+		<result column="NEW_FLAG" property="newFlag" jdbcType="CHAR" />
+		<result column="SOURCE_TYPE" property="sourceType" jdbcType="INTEGER" />
+		<result column="CUST_ID" property="custId" jdbcType="BIGINT" />
+	</resultMap>
+
+	<insert id="inserts" parameterType="tbUOfrDetailInst">
+		insert into
+		tb_u_ofr_detail_inst (OFR_DETAIL_INST_ID,
+		OFR_DETAIL_INST_NAME,
+		OFR_DETAIL_INST_REF_ID, OFR_INST_ID, OFR_ID,
+		OFR_DETAIL_TYPE_ID,
+		OFR_DETAIL_INST_DESC, CRT_DATE,
+		EFF_DATE, EXP_DATE,
+		MOD_DATE,
+		EFF_STATE, OFR_INST_LATN_ID, LATN_ID,
+		OFR_DETAIL_ID, NEW_FLAG,
+		SOURCE_TYPE,
+		CUST_ID)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.ofrDetailInstId,jdbcType=BIGINT},
+			#{item.ofrDetailInstName,jdbcType=VARCHAR},
+			#{item.ofrDetailInstRefId,jdbcType=BIGINT},
+			#{item.ofrInstId,jdbcType=BIGINT},
+			#{item.ofrId,jdbcType=INTEGER},
+			#{item.ofrDetailTypeId,jdbcType=VARCHAR},
+			#{item.ofrDetailInstDesc,jdbcType=VARCHAR},
+			#{item.crtDate,jdbcType=TIMESTAMP},
+			#{item.effDate,jdbcType=TIMESTAMP},
+			#{item.expDate,jdbcType=TIMESTAMP},
+			#{item.modDate,jdbcType=TIMESTAMP},
+			#{item.effState,jdbcType=VARCHAR},
+			#{item.ofrInstLatnId,jdbcType=INTEGER},
+			#{item.latnId,jdbcType=INTEGER},
+			#{item.ofrDetailId,jdbcType=BIGINT},
+			#{item.newFlag,jdbcType=CHAR},
+			#{item.sourceType,jdbcType=INTEGER},
+			#{item.custId,jdbcType=BIGINT})
+		</foreach>
+	</insert>
+
+</mapper>
